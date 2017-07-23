@@ -5,11 +5,12 @@ services:
     restart: "always"
     build: .
   db:
-    image: "mysql"
+    image: mysql
+    restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: "root"
-      MYSQL_DATABASE: "kkuser"
-      MYSQL_USER: "kkuser"
-      MYSQL_PASSWORD: "kkuser"
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: kkuser
+      MYSQL_USER: kkuser
+      MYSQL_PASSWORD: kkuser
     volumes:
       - /usr/share/kirurgiskklink/userdata:/var/lib/mysql
