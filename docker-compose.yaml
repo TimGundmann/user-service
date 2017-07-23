@@ -12,6 +12,6 @@ services:
       MYSQL_USER: "kkuser"
       MYSQL_PASSWORD: "kkuser"
     volumes:
-      - type: volume
+      type: volume
       source: /var/lib/mysql
       target: /usr/share/kirurgiskklink/userdata
