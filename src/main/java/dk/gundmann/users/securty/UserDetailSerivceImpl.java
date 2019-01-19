@@ -1,8 +1,8 @@
 package dk.gundmann.users.securty;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 import java.util.Collection;
+import java.util.List;
+import java.util.function.Function;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,52 +20,56 @@ public class UserDetailSerivceImpl implements UserDetailsService {
 	public UserDetailSerivceImpl(Service service) {
 		this.service = service;
 	}
-	
+
 	@Override
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-		User user = service.findByEmail(email);
-		if (user == null) {
-			throw new UsernameNotFoundException("error");
-		}
-		final String password = user.getPassword();
-		return new UserDetails() {
-			
-			private static final long serialVersionUID = 1L;
+		return service.findByEmail(email)
+				.map(convert())
+				.orElseThrow(() -> new UsernameNotFoundException("error"));
+	}
 
-			@Override
-			public boolean isEnabled() {
-				return true;
-			}
-			
-			@Override
-			public boolean isCredentialsNonExpired() {
-				return true;
-			}
-			
-			@Override
-			public boolean isAccountNonLocked() {
-				return true;
-			}
-			
-			@Override
-			public boolean isAccountNonExpired() {
-				return true;
-			}
-			
-			@Override
-			public String getUsername() {
-				return email;
-			}
-			
-			@Override
-			public String getPassword() {
-				return password;
-			}
-			
-			@Override
-			public Collection<? extends GrantedAuthority> getAuthorities() {
-				return newArrayList();
-			}
+	private Function<? super User, ? extends UserDetails> convert() {
+		return user -> {
+			final String password = user.getPassword();
+			return new UserDetails() {
+
+				private static final long serialVersionUID = 1L;
+
+				@Override
+				public boolean isEnabled() {
+					return true;
+				}
+
+				@Override
+				public boolean isCredentialsNonExpired() {
+					return true;
+				}
+
+				@Override
+				public boolean isAccountNonLocked() {
+					return true;
+				}
+
+				@Override
+				public boolean isAccountNonExpired() {
+					return true;
+				}
+
+				@Override
+				public String getUsername() {
+					return user.getEmail();
+				}
+
+				@Override
+				public String getPassword() {
+					return password;
+				}
+
+				@Override
+				public Collection<? extends GrantedAuthority> getAuthorities() {
+					return List.of();
+				}
+			};
 		};
 	}
 

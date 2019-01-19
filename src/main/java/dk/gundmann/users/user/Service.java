@@ -10,7 +10,7 @@ public class Service {
 	}
 	
 	public User findByEmail(String email) {
-		return repository.findOne(email);
+		return repository.findById(email);
 	}
 	
 }

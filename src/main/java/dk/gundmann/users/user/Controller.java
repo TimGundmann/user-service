@@ -1,7 +1,5 @@
 package dk.gundmann.users.user;
 
-import static com.google.common.collect.Lists.newArrayList;
-
 import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,7 +16,9 @@ class Controller {
 	
 	@RequestMapping("/users")
 	public List<User> users() {
-		return newArrayList(this.repository.findAll());
+		List<User> result = List.of();
+		this.repository.findAll().forEach(result::add);
+		return result;
 	}
-	
+
 }
