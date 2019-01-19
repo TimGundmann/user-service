@@ -26,7 +26,6 @@ import dk.gundmann.users.user.User;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-//@AutoConfigureTestDatabase
 @TestPropertySource(locations="classpath:application-test.properties")
 public class LoginTest {
 
@@ -71,15 +70,10 @@ public class LoginTest {
 		String token = login().getHeaders().get(TokenAuthenticationService.HEADER_STRING).get(0);
 	
 		HttpHeaders headers = new HttpHeaders();
-		headers.set("Header", "value");
-		headers.set("Other-Header", "othervalue");
-		
+		headers.set(TokenAuthenticationService.HEADER_STRING, token);
 
-		HttpEntity entity = ;
-
-		ResponseEntity<String> response = template.exchange("/users/current", HttpMethod.GET, new HttpEntity(headers), String.class);
 		// then
-		assertEquals(HttpStatus.OK, template.getForEntity("/users/current", String.class).getStatusCode());
+		assertEquals(HttpStatus.OK, template.exchange("/users/current", HttpMethod.GET, new HttpEntity<>(headers), String.class).getStatusCode());
 	}
 
 

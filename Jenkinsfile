@@ -2,7 +2,7 @@ node {
    def mvnHome
    stage('Preparation') { 
       git 'https://github.com/TimGundmann/user-service.git'
-      env.JAVA_HOME="${tool 'jdk 8'}"
+      env.JAVA_HOME="${tool 'jdk 9'}"
       env.PATH="/var/lib/jenkins/.local/bin:${env.PATH}"
       mvnHome = tool 'maven 3.3.9'
    }

@@ -1,5 +1,7 @@
 package dk.gundmann.users.user;
 
+import java.util.Optional;
+
 @org.springframework.stereotype.Service
 public class Service {
 
@@ -9,7 +11,7 @@ public class Service {
 		this.repository = repository;
 	}
 	
-	public User findByEmail(String email) {
+	public Optional<User> findByEmail(String email) {
 		return repository.findById(email);
 	}
 	
