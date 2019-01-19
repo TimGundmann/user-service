@@ -5,15 +5,3 @@ services:
     restart: "always"
     build: .
     image: user-service
-  db:
-    image: mysql
-    restart: always
-    ports:
-      - 3306:3306
-    environment:
-      MYSQL_ROOT_PASSWORD: root
-      MYSQL_DATABASE: kkuser
-      MYSQL_USER: kkuser
-      MYSQL_PASSWORD: kkuser
-    volumes:
-      - /usr/share/kirurgiskklink/userdata:/var/lib/mysql
