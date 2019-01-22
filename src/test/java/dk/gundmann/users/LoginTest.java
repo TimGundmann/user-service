@@ -57,6 +57,7 @@ public class LoginTest {
 
 		// when then
 		List<String> token = login().getHeaders().get(TokenAuthenticationService.HEADER_STRING);
+		assertThat(token).isNotNull();
 		assertThat(token).isNotEmpty();
 		assertThat(token.get(0)).isNotEmpty();
 	}
@@ -85,7 +86,7 @@ public class LoginTest {
 	}
 
 	private ResponseEntity<String> login() {
-		return template.postForEntity("/login", AccountCredentials.builder()
+		return template.postForEntity("/users/login", AccountCredentials.builder()
 				.username("test@test.com")
 				.password("password")
 				.build(), 
