@@ -16,6 +16,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -34,6 +35,8 @@ public class LoginTest {
 	
 	@Autowired
     private TestRestTemplate template;
+	
+	private BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 	
 	@Test
 	public void verifyThatIfNotAuthorizedThenError() throws Exception {
@@ -81,7 +84,7 @@ public class LoginTest {
 	private User createAUser() {
 		return userRepository.save(User.builder()
 				.email("test@test.com")
-				.password("{noop}password")
+				.password(passwordEncoder.encode("password"))
 				.build());
 	}
 

@@ -6,9 +6,12 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
+import dk.gundmann.security.JWTAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -21,14 +24,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		this.authenticationProvider = authenticationProvider;
 	}
 	
+	@Override
+	public void configure(WebSecurity web) throws Exception {
+	    web.ignoring().antMatchers("/actuator/**");
+	}
+	
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.antMatcher("/users/**")
+        http
+        	.antMatcher("/users/**")
     		.csrf().disable()
-        	.authorizeRequests().antMatchers(HttpMethod.POST, "/users/login").permitAll()
-            .and()
+        	.authorizeRequests()
+        		.antMatchers(HttpMethod.POST, "/users/login")
+        		.permitAll()
+        	.anyRequest().authenticated()
+        .and()
         	.addFilterBefore(new JWTLoginFilter("/users/login", authenticationManager()),
+                    UsernamePasswordAuthenticationFilter.class)
+            .addFilterBefore(new JWTAuthenticationFilter(),
                     UsernamePasswordAuthenticationFilter.class);
+
+        
     }
 
     @Override

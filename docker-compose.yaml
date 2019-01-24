@@ -5,3 +5,5 @@ services:
     restart: "always"
     build: .
     image: user-service
+    volumes:
+      - /security:/security
