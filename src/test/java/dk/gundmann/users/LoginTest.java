@@ -41,9 +41,16 @@ public class LoginTest {
 	@Test
 	public void verifyThatIfNotAuthorizedThenError() throws Exception {
 		// given when then
-		assertEquals(HttpStatus.FORBIDDEN, template.getForEntity("/test", String.class).getStatusCode());
+		assertEquals(HttpStatus.FORBIDDEN, template.getForEntity("/users/test", String.class).getStatusCode());
 	}
+
 	
+	@Test
+	public void verifyThatActuatorNotNeedAuthentication() throws Exception {
+		// given when then
+		assertEquals(HttpStatus.OK, template.getForEntity("/actuator/info", String.class).getStatusCode());
+	}
+
 	@Test
 	public void verifyThatItIsPossibleToLogin() throws Exception {
 		// given
