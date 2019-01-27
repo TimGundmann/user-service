@@ -13,7 +13,7 @@ node {
        currentBuild.displayName = newVersion
    }
    stage('Build') {
-     sh "'${mvnHome}/bin/mvn' clean package"
+     sh "'${mvnHome}/bin/mvn' clean package -U"
    }
    stage('Results') {
       junit '**/target/surefire-reports/TEST-*.xml'
