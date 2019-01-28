@@ -41,7 +41,7 @@ public class LoginTest {
 	@Test
 	public void verifyThatIfNotAuthorizedThenError() throws Exception {
 		// given when then
-		assertEquals(HttpStatus.FORBIDDEN, template.getForEntity("/users/test", String.class).getStatusCode());
+		assertEquals(HttpStatus.FORBIDDEN, template.getForEntity("/test", String.class).getStatusCode());
 	}
 
 	
@@ -84,7 +84,7 @@ public class LoginTest {
 		headers.set(TokenAuthenticationService.HEADER_STRING, token);
 
 		// then
-		assertEquals(HttpStatus.OK, template.exchange("/users/current", HttpMethod.GET, new HttpEntity<>(headers), String.class).getStatusCode());
+		assertEquals(HttpStatus.OK, template.exchange("/current", HttpMethod.GET, new HttpEntity<>(headers), String.class).getStatusCode());
 	}
 
 
@@ -96,7 +96,7 @@ public class LoginTest {
 	}
 
 	private ResponseEntity<String> login() {
-		return template.postForEntity("/users/login", AccountCredentials.builder()
+		return template.postForEntity("/login", AccountCredentials.builder()
 				.username("test@test.com")
 				.password("password")
 				.build(), 
