@@ -14,6 +14,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import dk.gundmann.security.JWTAuthenticationFilter;
+import dk.gundmann.security.SecurityConfig;
 
 @Configuration
 @EnableWebSecurity
@@ -21,10 +22,12 @@ import dk.gundmann.security.JWTAuthenticationFilter;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	private AuthenticationProvider authenticationProvider;
+	private SecurityConfig securityConfig;
 
 	@Autowired
-	public WebSecurityConfig(AuthenticationProvider authenticationProvider) {
+	public WebSecurityConfig(AuthenticationProvider authenticationProvider, SecurityConfig securityConfig) {
 		this.authenticationProvider = authenticationProvider;
+		this.securityConfig = securityConfig;
 	}
 	
 	@Override
@@ -44,9 +47,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         		.antMatchers(HttpMethod.POST, "/login").permitAll()
         	.anyRequest().authenticated()
         .and()
-        	.addFilterBefore(new JWTLoginFilter("/login", authenticationManager()),
+        	.addFilterBefore(new JWTLoginFilter("/login", authenticationManager(), securityConfig),
                     UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new JWTAuthenticationFilter(),
+            .addFilterBefore(new JWTAuthenticationFilter(securityConfig),
                     UsernamePasswordAuthenticationFilter.class);
 
         

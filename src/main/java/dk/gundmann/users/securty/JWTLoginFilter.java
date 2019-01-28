@@ -2,6 +2,7 @@ package dk.gundmann.users.securty;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.Date;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -17,11 +18,20 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dk.gundmann.security.SecurityConfig;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
-    public JWTLoginFilter(String url, AuthenticationManager authManager) {
+    private static final long EXPIRATIONTIME = 864_000_000; // 10 days
+
+	private SecurityConfig securityConfig;
+
+    public JWTLoginFilter(String url, AuthenticationManager authManager, SecurityConfig securityConfig) {
         super(new AntPathRequestMatcher(url));
         setAuthenticationManager(authManager);
+        this.securityConfig = securityConfig;
     }
 
     @Override
@@ -44,7 +54,17 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
             HttpServletRequest req,
             HttpServletResponse res, FilterChain chain,
             Authentication auth) throws IOException, ServletException {
-        TokenAuthenticationService
-                .addAuthentication(res, auth.getName());
+           	addAuthentication(res, auth.getName());
     }
+    
+    
+    private void addAuthentication(HttpServletResponse res, String username) {
+        String JWT = Jwts.builder()
+                .setSubject(username)
+                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
+                .signWith(SignatureAlgorithm.HS512, securityConfig.getSecret())
+                .compact();
+        res.addHeader(securityConfig.getHeaderString(), securityConfig.getTokenPrefix()+ " " + JWT);
+    }
+
 }
