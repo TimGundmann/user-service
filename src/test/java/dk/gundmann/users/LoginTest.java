@@ -21,8 +21,8 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import dk.gundmann.security.SecurityConfig;
 import dk.gundmann.users.securty.AccountCredentials;
-import dk.gundmann.users.securty.TokenAuthenticationService;
 import dk.gundmann.users.user.Repository;
 import dk.gundmann.users.user.User;
 
@@ -33,6 +33,9 @@ public class LoginTest {
 
 	@Autowired
 	private Repository userRepository;
+	
+	@Autowired
+	private SecurityConfig securityConfig;
 	
 	@Autowired
     private TestRestTemplate template;
@@ -67,7 +70,7 @@ public class LoginTest {
 		createAUser();
 
 		// when then
-		List<String> token = login().getHeaders().get(TokenAuthenticationService.HEADER_STRING);
+		List<String> token = login().getHeaders().get(securityConfig.getHeaderString());
 		assertThat(token).isNotNull();
 		assertThat(token).isNotEmpty();
 		assertThat(token.get(0)).isNotEmpty();
@@ -80,10 +83,10 @@ public class LoginTest {
 		createAUser();
 
 		// when 
-		String token = login().getHeaders().get(TokenAuthenticationService.HEADER_STRING).get(0);
+		String token = login().getHeaders().get(securityConfig.getHeaderString()).get(0);
 	
 		HttpHeaders headers = new HttpHeaders();
-		headers.set(TokenAuthenticationService.HEADER_STRING, token);
+		headers.set(securityConfig.getHeaderString(), token);
 
 		// then
 		assertEquals(HttpStatus.OK, template.exchange("/current", HttpMethod.GET, new HttpEntity<>(headers), String.class).getStatusCode());
