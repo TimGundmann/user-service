@@ -77,7 +77,6 @@ public class LoginTest {
 	}
 	
 	@Test
-	@Ignore
 	public void verifyThatTokenCanBeReused() throws Exception {
 		// given
 		createAUser();
