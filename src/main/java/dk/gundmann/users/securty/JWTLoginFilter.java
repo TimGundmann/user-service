@@ -54,17 +54,13 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
             HttpServletRequest req,
             HttpServletResponse res, FilterChain chain,
             Authentication auth) throws IOException, ServletException {
-           	addAuthentication(res, auth.getName());
+           	String JWT = Jwts.builder()
+                    .setSubject(auth.getName())
+                    .setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
+                    .signWith(SignatureAlgorithm.HS512, securityConfig.getSecret())
+                    .compact();
+            res.addHeader(securityConfig.getHeaderString(), securityConfig.getTokenPrefix()+ " " + JWT);
     }
     
     
-    private void addAuthentication(HttpServletResponse res, String username) {
-        String JWT = Jwts.builder()
-                .setSubject(username)
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
-                .signWith(SignatureAlgorithm.HS512, securityConfig.getSecret())
-                .compact();
-        res.addHeader(securityConfig.getHeaderString(), securityConfig.getTokenPrefix()+ " " + JWT);
-    }
-
 }

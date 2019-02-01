@@ -5,10 +5,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.util.List;
 
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -23,8 +24,8 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import dk.gundmann.security.SecurityConfig;
 import dk.gundmann.users.securty.AccountCredentials;
-import dk.gundmann.users.user.Repository;
 import dk.gundmann.users.user.User;
+import dk.gundmann.users.user.UserRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
@@ -32,7 +33,7 @@ import dk.gundmann.users.user.User;
 public class LoginTest {
 
 	@Autowired
-	private Repository userRepository;
+	private UserRepository userRepository;
 	
 	@Autowired
 	private SecurityConfig securityConfig;
@@ -48,11 +49,16 @@ public class LoginTest {
 		assertEquals(HttpStatus.FORBIDDEN, template.getForEntity("/test", String.class).getStatusCode());
 	}
 
-	
 	@Test
 	public void verifyThatActuatorNotNeedAuthentication() throws Exception {
 		// given when then
 		assertEquals(HttpStatus.OK, template.getForEntity("/actuator/info", String.class).getStatusCode());
+	}
+
+	@Test
+	public void verifyThatItIsPosibleToSignUp() throws Exception {
+		// given when then
+		assertEquals(HttpStatus.OK, template.postForEntity("/signup", User.builder().build(), String.class).getStatusCode());
 	}
 
 	@Test

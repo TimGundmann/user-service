@@ -9,15 +9,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import dk.gundmann.users.user.Service;
+import dk.gundmann.users.user.ServiceService;
 import dk.gundmann.users.user.User;
 
 @org.springframework.stereotype.Service
 public class UserDetailSerivceImpl implements UserDetailsService {
 
-	private Service service;
+	private ServiceService service;
 
-	public UserDetailSerivceImpl(Service service) {
+	public UserDetailSerivceImpl(ServiceService service) {
 		this.service = service;
 	}
 
