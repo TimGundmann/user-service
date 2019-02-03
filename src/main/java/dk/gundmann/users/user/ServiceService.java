@@ -3,6 +3,8 @@ package dk.gundmann.users.user;
 import java.util.List;
 import java.util.Optional;
 
+import javax.mail.MessagingException;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -25,8 +27,8 @@ public class ServiceService {
 		this.mailService = mailService;
 	}
 	
-	public Optional<User> findByEmail(String email) {
-		return repository.findById(email);
+	public Optional<User> findActiveByEmail(String email) {
+		return repository.findActiveUser(email);
 	}
 	
 	public void createUser(String email, String password) {
@@ -42,13 +44,14 @@ public class ServiceService {
 		return result;
 	}
 
-	public void signUp(User user) {
+	public void signUp(User user) throws MessagingException {
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		repository.save(user);
 		mailService.sendActivationMail(user);
 	}
 
 	public boolean activate(String token) {
-		return findByEmail(ActivationToken.aBuilder()
+		return repository.findById(ActivationToken.aBuilder()
 				.secret(securityConfig.getSecret())
 				.token(token)
 				.pars())

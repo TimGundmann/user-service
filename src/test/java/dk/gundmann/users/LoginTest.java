@@ -95,6 +95,7 @@ public class LoginTest {
 		return userRepository.save(User.builder()
 				.email("test@test.com")
 				.password(passwordEncoder.encode("password"))
+				.active(true)
 				.build());
 	}
 

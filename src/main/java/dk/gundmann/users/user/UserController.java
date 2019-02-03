@@ -3,6 +3,8 @@ package dk.gundmann.users.user;
 import java.security.Principal;
 import java.util.List;
 
+import javax.mail.MessagingException;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,7 +20,7 @@ class UserController {
 	public UserController(ServiceService service) {
 		this.service = service;
 	}
-	
+
 	@GetMapping
 	public List<User> users() {
 		return service.users();
@@ -26,17 +28,17 @@ class UserController {
 
 	@GetMapping("/current")
 	public User current(Principal principal) {
-		return service.findByEmail(principal.getName()).get();
+		return service.findActiveByEmail(principal.getName()).get();
 	}
-	
+
 	@PostMapping("/signon")
-	public void signUp(@RequestBody User user) {
+	public void signUp(@RequestBody User user) throws MessagingException {
 		service.signUp(user);
 	}
-	
+
 	@PostMapping("/activate")
 	public void activate(@RequestBody String token) {
 		service.activate(token);
 	}
-	
+
 }

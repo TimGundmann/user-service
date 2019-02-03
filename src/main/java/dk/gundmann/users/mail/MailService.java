@@ -1,7 +1,16 @@
 package dk.gundmann.users.mail;
 
-import org.springframework.mail.SimpleMailMessage;
+import java.io.File;
+
+import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
 import dk.gundmann.security.SecurityConfig;
@@ -19,12 +28,16 @@ class MailService implements IMailService {
     	
     }
  
-    public void sendActivationMail(User user) {
-        SimpleMailMessage message = new SimpleMailMessage(); 
-        message.setTo(user.getEmail()); 
-        message.setSubject("Activation"); 
-        message.setText("Welcome to gundmann.dk\\n Press this link to activate you https://localhost:4200/activate/" + makeLinkToken(user.getEmail()));
-        emailSender.send(message);
+    public void sendActivationMail(User user) throws MessagingException {
+    	MimeMessage message = emailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+		helper.setSubject("Activation");
+		helper.setFrom("noreply@gundmann.dk");
+    	helper.setTo(user.getEmail());
+
+    	helper.setText("<html><body><h2>Welcome to gundmann.dk</h2> <p>Press this link to activate you <a href=\"http://localhost:4200/#/activate/" + makeLinkToken(user.getEmail()) + "\">link</a></p></body></html>", true);
+
+    	emailSender.send(message);    	
     }
     
     private String makeLinkToken(String email) {
