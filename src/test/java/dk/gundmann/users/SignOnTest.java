@@ -1,21 +1,26 @@
 package dk.gundmann.users;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import dk.gundmann.users.mail.ActivationToken;
+import dk.gundmann.users.mail.IMailService;
 import dk.gundmann.users.user.User;
 import dk.gundmann.users.user.UserRepository;
 
@@ -29,6 +34,9 @@ public class SignOnTest {
 	
 	@Autowired
     private TestRestTemplate template;
+	
+	@MockBean
+	private IMailService mailService;
 
 	@Test
 	public void verifyThatAUserIsSignedOn() throws Exception {
@@ -70,4 +78,5 @@ public class SignOnTest {
 				.email("signon@test.com")
 				.build(), String.class);
 	}
+	
 }

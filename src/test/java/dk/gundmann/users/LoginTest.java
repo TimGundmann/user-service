@@ -8,11 +8,10 @@ import java.util.List;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -29,7 +28,7 @@ import dk.gundmann.users.user.UserRepository;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
-@TestPropertySource(locations="classpath:application-test.properties")
+@TestPropertySource(locations = "classpath:application-test.properties")
 public class LoginTest {
 
 	@Autowired
@@ -53,12 +52,6 @@ public class LoginTest {
 	public void verifyThatActuatorNotNeedAuthentication() throws Exception {
 		// given when then
 		assertEquals(HttpStatus.OK, template.getForEntity("/actuator/info", String.class).getStatusCode());
-	}
-
-	@Test
-	public void verifyThatItIsPosibleToSignUp() throws Exception {
-		// given when then
-		assertEquals(HttpStatus.OK, template.postForEntity("/signup", User.builder().build(), String.class).getStatusCode());
 	}
 
 	@Test

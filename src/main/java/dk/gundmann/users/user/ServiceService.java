@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 
 import dk.gundmann.security.SecurityConfig;
 import dk.gundmann.users.mail.ActivationToken;
-import io.jsonwebtoken.Jwts;
+import dk.gundmann.users.mail.IMailService;
 
 @Service
 public class ServiceService {
@@ -16,11 +16,13 @@ public class ServiceService {
 	private UserRepository repository;
 	private PasswordEncoder passwordEncoder;
 	private SecurityConfig securityConfig;
+	private IMailService mailService;
 
-	public ServiceService(UserRepository repository, PasswordEncoder passwordEncoder, SecurityConfig securityConfig) {
+	public ServiceService(UserRepository repository, PasswordEncoder passwordEncoder, SecurityConfig securityConfig, IMailService mailService) {
 		this.repository = repository;
 		this.passwordEncoder = passwordEncoder;
 		this.securityConfig = securityConfig;
+		this.mailService = mailService;
 	}
 	
 	public Optional<User> findByEmail(String email) {
@@ -42,6 +44,7 @@ public class ServiceService {
 
 	public void signUp(User user) {
 		repository.save(user);
+		mailService.sendActivationMail(user);
 	}
 
 	public boolean activate(String token) {

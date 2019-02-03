@@ -2,11 +2,13 @@ package dk.gundmann.users.mail;
 
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.stereotype.Service;
 
 import dk.gundmann.security.SecurityConfig;
 import dk.gundmann.users.user.User;
 
-public class MailService {
+@Service
+class MailService implements IMailService {
 
     private JavaMailSender emailSender;
 	private SecurityConfig securityConfig;
