@@ -1,16 +1,12 @@
 package dk.gundmann.users.mail;
 
-import java.io.File;
+import java.util.Arrays;
 
-import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.mail.javamail.MimeMessagePreparator;
 import org.springframework.stereotype.Service;
 
 import dk.gundmann.security.SecurityConfig;
@@ -39,7 +35,17 @@ class MailService implements IMailService {
 
     	emailSender.send(message);    	
     }
-    
+
+    public void sendMailToAdmin(String content) throws MessagingException {
+    	MimeMessage message = emailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+		helper.setSubject("Kontakt");
+		helper.setFrom("noreply@gundmann.dk");
+    	helper.setTo(new String[] {"tim@gundmann.dk" });
+    	helper.setText(content, true);
+    	emailSender.send(message);    	
+    }
+
     private String makeLinkToken(String email) {
     	return ActivationToken.aBuilder()
     			.email(email)
