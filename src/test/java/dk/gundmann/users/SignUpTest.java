@@ -23,7 +23,7 @@ import dk.gundmann.users.user.UserRepository;
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = WebEnvironment.RANDOM_PORT)
 @TestPropertySource(locations="classpath:application-test.properties")
-public class SignOnTest {
+public class SignUpTest {
 
 	@Autowired
 	private UserRepository userRepository;
@@ -39,7 +39,7 @@ public class SignOnTest {
 		// given when then
 		assertEquals(HttpStatus.OK, sigeOn()
 				.getStatusCode());
-		assertThat(userRepository.findById("signon@test.com")).isNotNull();
+		assertThat(userRepository.findById("signup@test.com")).isNotNull();
 	}
 
 	@Test
@@ -48,7 +48,7 @@ public class SignOnTest {
 		sigeOn();
 		
 		// when then
-		assertThat(userRepository.findById("signon@test.com").get().isActive()).isFalse();
+		assertThat(userRepository.findById("signup@test.com").get().isActive()).isFalse();
 	}
 	
 	@Test
@@ -57,7 +57,7 @@ public class SignOnTest {
 		sigeOn();
 		
 		String activationToken = ActivationToken.aBuilder()
-				.email("signon@test.com")
+				.email("signup@test.com")
 				.secret("test")
 				.build();
 		
@@ -66,12 +66,12 @@ public class SignOnTest {
 		
 		
 		// then
-		assertThat(userRepository.findById("signon@test.com").get().isActive()).isTrue();
+		assertThat(userRepository.findById("signup@test.com").get().isActive()).isTrue();
 	}
 
 	private ResponseEntity<String> sigeOn() {
-		return template.postForEntity("/signon", User.builder()
-				.email("signon@test.com")
+		return template.postForEntity("/signup", User.builder()
+				.email("signup@test.com")
 				.password("1234")
 				.name("Test")
 				.build(), String.class);

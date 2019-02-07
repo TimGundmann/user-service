@@ -39,7 +39,7 @@ class UserController {
 		return service.findActiveByEmail(principal.getName()).get();
 	}
 
-	@PostMapping("/signon")
+	@PostMapping("/signup")
 	public void signUp(@RequestBody User user) throws MessagingException {
 		service.signUp(user);
 	}
