@@ -3,6 +3,7 @@ package dk.gundmann.users;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
+import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
@@ -11,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
 import org.springframework.boot.test.web.client.TestRestTemplate;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -49,6 +49,26 @@ public class LoginTest {
 	}
 
 	@Test
+	public void verifyThatIfNotAdminThenNotAuthorized() throws Exception {
+		// given 
+		createAUser();
+		
+		// when then
+		assertEquals(HttpStatus.FORBIDDEN, template.getForEntity("/", String.class).getStatusCode());
+	}
+
+	@Test
+	public void verifyThatIfAdminThenAuthorized() throws Exception {
+		// given 
+		createAnAdminUser();
+		
+		HttpHeaders headers = logInAndGetHeadersWithToken();
+
+		// when then
+		assertEquals(HttpStatus.OK, template.exchange("/", HttpMethod.GET, new HttpEntity<>(headers), String.class).getStatusCode());
+	}
+
+	@Test
 	public void verifyThatActuatorNotNeedAuthentication() throws Exception {
 		// given when then
 		assertEquals(HttpStatus.OK, template.getForEntity("/actuator/info", String.class).getStatusCode());
@@ -81,13 +101,18 @@ public class LoginTest {
 		createAUser();
 
 		// when 
+		HttpHeaders headers = logInAndGetHeadersWithToken();
+
+		// then
+		assertEquals(HttpStatus.OK, template.exchange("/current", HttpMethod.GET, new HttpEntity<>(headers), String.class).getStatusCode());
+	}
+
+	private HttpHeaders logInAndGetHeadersWithToken() {
 		String token = login().getHeaders().get(securityConfig.getHeaderString()).get(0);
 	
 		HttpHeaders headers = new HttpHeaders();
 		headers.set(securityConfig.getHeaderString(), token);
-
-		// then
-		assertEquals(HttpStatus.OK, template.exchange("/current", HttpMethod.GET, new HttpEntity<>(headers), String.class).getStatusCode());
+		return headers;
 	}
 
 
@@ -95,7 +120,18 @@ public class LoginTest {
 		return userRepository.save(User.builder()
 				.email("test@test.com")
 				.password(passwordEncoder.encode("password"))
+				.name("Test")
 				.active(true)
+				.build());
+	}
+
+	private User createAnAdminUser() {
+		return userRepository.save(User.builder()
+				.email("test@test.com")
+				.password(passwordEncoder.encode("password"))
+				.name("Test")
+				.active(true)
+				.roles(Collections.singleton("ADMIN"))
 				.build());
 	}
 

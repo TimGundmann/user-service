@@ -1,6 +1,7 @@
 package dk.gundmann.users.mail;
 
 import java.util.Arrays;
+import java.util.Collection;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -36,12 +37,12 @@ class MailService implements IMailService {
     	emailSender.send(message);    	
     }
 
-    public void sendMailToAdmin(String content) throws MessagingException {
+    public void sendMailToAdmin(String content, Collection<String> adminMails) throws MessagingException {
     	MimeMessage message = emailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 		helper.setSubject("Kontakt");
 		helper.setFrom("noreply@gundmann.dk");
-    	helper.setTo(new String[] {"tim@gundmann.dk" });
+    	helper.setTo(adminMails.toArray(new String[adminMails.size()]));
     	helper.setText(content, true);
     	emailSender.send(message);    	
     }

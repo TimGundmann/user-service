@@ -6,6 +6,7 @@ import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -15,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 import dk.gundmann.security.JWTAuthenticationFilter;
 import dk.gundmann.security.SecurityConfig;
+import dk.gundmann.users.user.UserService;
 
 @Configuration
 @EnableWebSecurity
@@ -23,10 +25,12 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	
 	private AuthenticationProvider authenticationProvider;
 	private SecurityConfig securityConfig;
+	private UserService userService;
 
 	@Autowired
-	public WebSecurityConfig(AuthenticationProvider authenticationProvider, SecurityConfig securityConfig) {
+	public WebSecurityConfig(AuthenticationProvider authenticationProvider, UserService userService, SecurityConfig securityConfig) {
 		this.authenticationProvider = authenticationProvider;
+		this.userService = userService;
 		this.securityConfig = securityConfig;
 	}
 	
@@ -47,7 +51,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         		.antMatchers(HttpMethod.POST, "/login", "/signon", "/activate", "/contactMail").permitAll()
         	.anyRequest().authenticated()
         .and()
-        	.addFilterBefore(new JWTLoginFilter("/login", authenticationManager(), securityConfig),
+        	.addFilterBefore(new JWTLoginFilter("/login", authenticationManager(), userService, securityConfig),
                     UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(new JWTAuthenticationFilter(securityConfig),
                     UsernamePasswordAuthenticationFilter.class);

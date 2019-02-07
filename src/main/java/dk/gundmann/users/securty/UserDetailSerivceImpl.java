@@ -1,23 +1,24 @@
 package dk.gundmann.users.securty;
 
 import java.util.Collection;
-import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
-import dk.gundmann.users.user.ServiceService;
+import dk.gundmann.users.user.UserService;
 import dk.gundmann.users.user.User;
 
 @org.springframework.stereotype.Service
 public class UserDetailSerivceImpl implements UserDetailsService {
 
-	private ServiceService service;
+	private UserService service;
 
-	public UserDetailSerivceImpl(ServiceService service) {
+	public UserDetailSerivceImpl(UserService service) {
 		this.service = service;
 	}
 
@@ -30,7 +31,6 @@ public class UserDetailSerivceImpl implements UserDetailsService {
 
 	private Function<? super User, ? extends UserDetails> convert() {
 		return user -> {
-			final String password = user.getPassword();
 			return new UserDetails() {
 
 				private static final long serialVersionUID = 1L;
@@ -62,12 +62,14 @@ public class UserDetailSerivceImpl implements UserDetailsService {
 
 				@Override
 				public String getPassword() {
-					return password;
+					return user.getPassword();
 				}
 
 				@Override
 				public Collection<? extends GrantedAuthority> getAuthorities() {
-					return List.of();
+					return user.getRoles().stream()
+							.map(role -> new SimpleGrantedAuthority(role))
+							.collect(Collectors.toList());
 				}
 			};
 		};

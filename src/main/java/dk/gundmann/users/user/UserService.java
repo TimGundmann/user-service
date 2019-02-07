@@ -13,14 +13,14 @@ import dk.gundmann.users.mail.ActivationToken;
 import dk.gundmann.users.mail.IMailService;
 
 @Service
-public class ServiceService {
+public class UserService {
 
 	private UserRepository repository;
 	private PasswordEncoder passwordEncoder;
 	private SecurityConfig securityConfig;
 	private IMailService mailService;
 
-	public ServiceService(UserRepository repository, PasswordEncoder passwordEncoder, SecurityConfig securityConfig, IMailService mailService) {
+	public UserService(UserRepository repository, PasswordEncoder passwordEncoder, SecurityConfig securityConfig, IMailService mailService) {
 		this.repository = repository;
 		this.passwordEncoder = passwordEncoder;
 		this.securityConfig = securityConfig;
@@ -39,9 +39,7 @@ public class ServiceService {
 	}
 	
 	public List<User> users() {
-		List<User> result = List.of();
-		this.repository.findAll().forEach(result::add);
-		return result;
+		return this.repository.findAll();
 	}
 
 	public void signUp(User user) throws MessagingException {
@@ -61,5 +59,9 @@ public class ServiceService {
 				return true;
 			}).orElse(false);
 	}
-			
+	
+	public List<User> findAllWithRole(String role) {
+		return this.repository.findAllWithRole(role);
+	}
+	
 }
