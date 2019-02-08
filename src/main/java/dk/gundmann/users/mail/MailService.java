@@ -49,7 +49,7 @@ class MailService implements IMailService {
     			+ "<p> Følgende bruger har anmodedet om oprettelse hos Bus Roskilde:</p>"
     			+ "<p>" + user.toString() + "</p>" 
     			+ "<br/>"
-    			+ "<p><a href=\"http://localhost:4200/#/activate/" + makeLinkToken(user.getEmail()) + "\">Aktiver brugeren</a></p>"
+    			+ "<p><a href=\"http://www.gundmann.dk/bus/#/activate/" + makeLinkToken(user.getEmail()) + "\">Aktiver brugeren</a></p>"
     			+ "<br/>"
     			+ "<p>Med venlig hilsen</p>"
     			+ "<p>Bus roskilde</p>"
@@ -58,7 +58,7 @@ class MailService implements IMailService {
     	emailSender.send(message);    	
     }
 
-    public void sendMailToAdmin(String content, Collection<String> adminMails) throws MessagingException {
+    public void sendMailTo(String content, Collection<String> adminMails) throws MessagingException {
     	MimeMessage message = emailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 		helper.setSubject("Kontakt");
