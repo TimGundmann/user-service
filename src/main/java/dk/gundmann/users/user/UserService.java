@@ -2,9 +2,11 @@ package dk.gundmann.users.user;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 
+import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -43,8 +45,7 @@ public class UserService {
 	}
 
 	public void signUp(User user) throws MessagingException {
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		repository.save(user);
+		verifyAndSaveNewUser(user);
 		mailService.sendActivationMail(user);
 	}
 
@@ -60,8 +61,21 @@ public class UserService {
 			}).orElse(false);
 	}
 	
-	public List<User> findAllWithRole(String role) {
-		return this.repository.findAllWithRole(role);
+	public List<String> findAllEmailsWithRole(String role) {
+		return this.repository.findAllWithRole(role).stream()
+				.map(u -> u.getEmail())
+				.collect(Collectors.toList());
+	}
+
+	public void busSignUp(User user) throws MessagingException {
+		verifyAndSaveNewUser(user);
+		mailService.sendMailToAdmin("Sign up user: " + user, findAllEmailsWithRole("ADMIN"));
 	}
 	
+	private void verifyAndSaveNewUser(User user) {
+		repository.findById(user.getEmail()).ifPresent(u -> { throw new UserExistsException("Brugeren findes allerede!"); });
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		repository.save(user);
+	}
+
 }

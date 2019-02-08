@@ -24,6 +24,8 @@ public class User {
 	@Id
 	private String email;
 	
+	private String number;
+	
 	@NotBlank
 	private String name;
 	
