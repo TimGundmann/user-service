@@ -41,7 +41,7 @@ class MailService implements IMailService {
 		MimeMessageHelper helper = new MimeMessageHelper(message);
 		helper.setSubject("Aktivering");
 		helper.setFrom("noreply@gundmann.dk");
-    	helper.setTo(user.getEmail());
+    	helper.setTo(adminMails.toArray(new String[adminMails.size()]));
 
     	helper.setText("<html><body>"
     			+ "<h2>Aktivering af ny bruger</h2>"
