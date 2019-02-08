@@ -39,7 +39,7 @@ class MailService implements IMailService {
     public void sendActivationMailToAdmin(User user, Collection<String> adminMails) throws MessagingException {
     	MimeMessage message = emailSender.createMimeMessage();
 		MimeMessageHelper helper = new MimeMessageHelper(message);
-		helper.setSubject("Activation");
+		helper.setSubject("Aktivering");
 		helper.setFrom("noreply@gundmann.dk");
     	helper.setTo(user.getEmail());
 
