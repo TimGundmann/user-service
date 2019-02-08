@@ -3,6 +3,7 @@ package dk.gundmann.users;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,10 +35,15 @@ public class SignUpTest {
 	@MockBean
 	private IMailService mailService;
 
+	@Before
+	public void removeUser() {
+		userRepository.deleteAll();
+	}
+	
 	@Test
 	public void verifyThatAUserIsSignedOn() throws Exception {
 		// given when then
-		assertEquals(HttpStatus.OK, sigeOn()
+		assertEquals(HttpStatus.OK, sigeUp()
 				.getStatusCode());
 		assertThat(userRepository.findById("signup@test.com")).isNotNull();
 	}
@@ -45,7 +51,7 @@ public class SignUpTest {
 	@Test
 	public void verifyThatAUserIsSignedOnAndNotActivated() throws Exception {
 		// given
-		sigeOn();
+		sigeUp();
 		
 		// when then
 		assertThat(userRepository.findById("signup@test.com").get().isActive()).isFalse();
@@ -54,7 +60,7 @@ public class SignUpTest {
 	@Test
 	public void verifyThatAUserIsActivateded() throws Exception {
 		// given
-		sigeOn();
+		sigeUp();
 		
 		String activationToken = ActivationToken.aBuilder()
 				.email("signup@test.com")
@@ -69,7 +75,7 @@ public class SignUpTest {
 		assertThat(userRepository.findById("signup@test.com").get().isActive()).isTrue();
 	}
 
-	private ResponseEntity<String> sigeOn() {
+	private ResponseEntity<String> sigeUp() {
 		return template.postForEntity("/signup", User.builder()
 				.email("signup@test.com")
 				.password("1234")

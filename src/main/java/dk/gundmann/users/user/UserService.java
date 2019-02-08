@@ -75,6 +75,7 @@ public class UserService {
 	private void verifyAndSaveNewUser(User user) {
 		repository.findById(user.getEmail()).ifPresent(u -> { throw new UserExistsException("Brugeren findes allerede!"); });
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setActive(false);
 		repository.save(user);
 	}
 
