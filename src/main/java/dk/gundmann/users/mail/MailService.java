@@ -1,6 +1,5 @@
 package dk.gundmann.users.mail;
 
-import java.util.Arrays;
 import java.util.Collection;
 
 import javax.mail.MessagingException;
@@ -33,6 +32,28 @@ class MailService implements IMailService {
     	helper.setTo(user.getEmail());
 
     	helper.setText("<html><body><h2>Welcome to gundmann.dk</h2> <p>Press this link to activate you <a href=\"http://localhost:4200/#/activate/" + makeLinkToken(user.getEmail()) + "\">link</a></p></body></html>", true);
+
+    	emailSender.send(message);    	
+    }
+
+    public void sendActivationMailToAdmin(User user, Collection<String> adminMails) throws MessagingException {
+    	MimeMessage message = emailSender.createMimeMessage();
+		MimeMessageHelper helper = new MimeMessageHelper(message);
+		helper.setSubject("Activation");
+		helper.setFrom("noreply@gundmann.dk");
+    	helper.setTo(user.getEmail());
+
+    	helper.setText("<html><body>"
+    			+ "<h2>Aktivering af ny bruger</h2>"
+    			+ "<br/>"
+    			+ "<p> Følgende bruger har anmodedet om oprettelse hos Bus Roskilde:</p>"
+    			+ "<p>" + user.toString() + "</p>" 
+    			+ "<br/>"
+    			+ "<p><a href=\"http://localhost:4200/#/activate/" + makeLinkToken(user.getEmail()) + "\">Aktiver brugeren</a></p>"
+    			+ "<br/>"
+    			+ "<p>Med venlig hilsen</p>"
+    			+ "<p>Bus roskilde</p>"
+    			+ "</body></html>", true);
 
     	emailSender.send(message);    	
     }

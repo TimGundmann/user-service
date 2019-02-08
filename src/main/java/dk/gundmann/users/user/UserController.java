@@ -82,7 +82,7 @@ class UserController {
 
 	@PostMapping("/contactMail")
 	public void sendMailToAdmin(@RequestBody String content) throws MessagingException {
-		this.mailService.sendMailToAdmin(content, service.findAllEmailsWithRole("ADMIN"));
+		this.mailService.sendMailTo(content, service.findAllEmailsWithRole("ADMIN"));
 	}
 
 }

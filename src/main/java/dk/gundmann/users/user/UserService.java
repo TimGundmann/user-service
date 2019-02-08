@@ -1,5 +1,6 @@
 package dk.gundmann.users.user;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -69,7 +70,7 @@ public class UserService {
 
 	public void busSignUp(User user) throws MessagingException {
 		verifyAndSaveNewUser(user);
-		mailService.sendMailToAdmin("Sign up user: " + user, findAllEmailsWithRole("ADMIN"));
+		mailService.sendActivationMailToAdmin(user, findAllEmailsWithRole("ADMIN"));
 	}
 	
 	private void verifyAndSaveNewUser(User user) {
