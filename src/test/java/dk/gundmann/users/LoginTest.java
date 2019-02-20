@@ -58,17 +58,6 @@ public class LoginTest {
 	}
 
 	@Test
-	public void verifyThatIfAdminThenAuthorized() throws Exception {
-		// given 
-		createAnAdminUser();
-		
-		HttpHeaders headers = logInAndGetHeadersWithToken();
-
-		// when then
-		assertEquals(HttpStatus.OK, template.exchange("/", HttpMethod.GET, new HttpEntity<>(headers), String.class).getStatusCode());
-	}
-
-	@Test
 	public void verifyThatActuatorNotNeedAuthentication() throws Exception {
 		// given when then
 		assertEquals(HttpStatus.OK, template.getForEntity("/actuator/info", String.class).getStatusCode());
