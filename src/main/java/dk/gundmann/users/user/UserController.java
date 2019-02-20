@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,8 +55,7 @@ class UserController {
 			HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
-	@GetMapping
-	@IsAdmin
+	@GetMapping("/all")
 	public List<User> users() {
 		return service.users();
 	}
@@ -68,6 +68,12 @@ class UserController {
 	@PostMapping("/signup")
 	public void signUp(@RequestBody User user) throws MessagingException {
 		service.signUp(user);
+	}
+
+	@PostMapping("/{email}/active/{active}")
+	@IsAdmin
+	public void changeActivation(@PathVariable String email, @PathVariable boolean active) throws MessagingException {
+		service.toggleActivation(email, active);
 	}
 
 	@PostMapping("/bussignup")

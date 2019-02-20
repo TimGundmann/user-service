@@ -1,5 +1,6 @@
 package dk.gundmann.users.user;
 
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -78,6 +79,14 @@ public class UserService {
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setActive(false);
 		repository.save(user);
+	}
+
+	public void toggleActivation(String email, boolean active) {
+		repository.findById(email).ifPresent(user -> { 
+			user.setActive(active);
+			repository.save(user);
+		});
+		
 	}
 
 }
