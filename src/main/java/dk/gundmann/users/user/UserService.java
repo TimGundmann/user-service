@@ -1,14 +1,11 @@
 package dk.gundmann.users.user;
 
-import java.time.LocalDate;
-import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import javax.mail.MessagingException;
 
-import org.hibernate.boot.model.naming.IllegalIdentifierException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -87,6 +84,14 @@ public class UserService {
 			repository.save(user);
 		});
 		
+	}
+
+	public void update(User user) {
+		repository.save(user);
+	}
+
+	public void delete(User user) {
+		repository.delete(user);		
 	}
 
 }

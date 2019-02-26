@@ -1,7 +1,7 @@
 package dk.gundmann.users.securty;
 
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

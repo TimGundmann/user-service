@@ -2,7 +2,6 @@ package dk.gundmann.users.user;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -84,6 +83,16 @@ class UserController {
 	@PostMapping("/activate")
 	public void activate(@RequestBody String token) {
 		service.activate(token);
+	}
+	
+	@PostMapping("/update")
+	public void update(@RequestBody User user) {
+		service.update(user);
+	}
+
+	@PostMapping("/delete")
+	public void delete(@RequestBody User user) {
+		service.delete(user);
 	}
 
 	@PostMapping("/contactMail")

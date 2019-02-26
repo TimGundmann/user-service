@@ -20,7 +20,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import dk.gundmann.security.SecurityConfig;
-import dk.gundmann.users.user.User;
 import dk.gundmann.users.user.UserService;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
