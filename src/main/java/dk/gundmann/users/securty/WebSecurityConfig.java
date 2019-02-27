@@ -13,6 +13,7 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 import dk.gundmann.security.JWTAuthenticationFilter;
+import dk.gundmann.security.RemoteAddressResolver;
 import dk.gundmann.security.SecurityConfig;
 import dk.gundmann.users.user.UserService;
 
@@ -24,12 +25,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	private AuthenticationProvider authenticationProvider;
 	private SecurityConfig securityConfig;
 	private UserService userService;
+	private RemoteAddressResolver addressResolver;
 
-	@Autowired
-	public WebSecurityConfig(AuthenticationProvider authenticationProvider, UserService userService, SecurityConfig securityConfig) {
+	public WebSecurityConfig(
+			AuthenticationProvider authenticationProvider, 
+			UserService userService, 
+			SecurityConfig securityConfig,
+			RemoteAddressResolver addressResolver) {
 		this.authenticationProvider = authenticationProvider;
 		this.userService = userService;
 		this.securityConfig = securityConfig;
+		this.addressResolver = addressResolver;
 	}
 	
     @Override
@@ -44,9 +50,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         		.antMatchers(HttpMethod.POST, "/login", "/signup", "/bussignup", "/activate", "/contactMail").permitAll()
         	.anyRequest().authenticated()
         .and()
-        	.addFilterBefore(new JWTLoginFilter("/login", authenticationManager(), userService, securityConfig),
+        	.addFilterBefore(new JWTLoginFilter("/login", authenticationManager(), userService, securityConfig, addressResolver),
                     UsernamePasswordAuthenticationFilter.class)
-            .addFilterBefore(new JWTAuthenticationFilter(securityConfig),
+            .addFilterBefore(new JWTAuthenticationFilter(securityConfig, addressResolver),
                     UsernamePasswordAuthenticationFilter.class);
 
         

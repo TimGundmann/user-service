@@ -19,6 +19,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import dk.gundmann.security.RemoteAddressResolver;
 import dk.gundmann.security.SecurityConfig;
 import dk.gundmann.users.user.UserService;
 import io.jsonwebtoken.Jwts;
@@ -32,9 +33,17 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
 	private UserService userService;
 
-    public JWTLoginFilter(String url, AuthenticationManager authManager, UserService userService, SecurityConfig securityConfig) {
+	private RemoteAddressResolver addressResolver;
+
+    public JWTLoginFilter(
+    		String url, 
+    		AuthenticationManager authManager, 
+    		UserService userService, 
+    		SecurityConfig securityConfig,
+    		RemoteAddressResolver addressResolver) {
         super(new AntPathRequestMatcher(url));
 		this.userService = userService;
+		this.addressResolver = addressResolver;
         setAuthenticationManager(authManager);
         this.securityConfig = securityConfig;
     }
@@ -66,7 +75,7 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
                     .setSubject(auth.getName())
                     .setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
                     .signWith(SignatureAlgorithm.HS512, securityConfig.getSecret())
-                    .claim("ip", req.getRemoteAddr())
+                    .claim("ip", addressResolver.remoteAdress(req))
                     .claim("roles", auth.getAuthorities().stream()
                     		.map(role -> "ROLE_" + role.toString())
                     		.collect(Collectors.joining(",")))
