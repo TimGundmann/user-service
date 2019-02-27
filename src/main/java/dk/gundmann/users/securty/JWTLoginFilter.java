@@ -66,6 +66,7 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
                     .setSubject(auth.getName())
                     .setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
                     .signWith(SignatureAlgorithm.HS512, securityConfig.getSecret())
+                    .claim("ip", req.getRemoteAddr())
                     .claim("roles", auth.getAuthorities().stream()
                     		.map(role -> "ROLE_" + role.toString())
                     		.collect(Collectors.joining(",")))
