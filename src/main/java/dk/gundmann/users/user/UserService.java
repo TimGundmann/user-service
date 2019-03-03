@@ -1,5 +1,6 @@
 package dk.gundmann.users.user;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -93,5 +94,12 @@ public class UserService {
 	public void delete(User user) {
 		repository.delete(user);		
 	}
+
+	public Collection<String> findAllEmailsNotification(String type) {
+		return repository.findAllEmailsNotification(type).stream()
+				.map(u -> u.getEmail())
+				.collect(Collectors.toList());
+	}
+
 
 }

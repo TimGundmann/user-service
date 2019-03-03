@@ -44,4 +44,8 @@ public class User {
 	@Lob
 	private String picture;
 	
+	@Builder.Default
+	@ElementCollection(fetch=FetchType.EAGER) 	
+	private Set<String> notifications = new HashSet<>();
+	
 }

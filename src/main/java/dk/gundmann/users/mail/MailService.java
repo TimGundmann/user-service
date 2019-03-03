@@ -37,25 +37,18 @@ class MailService implements IMailService {
     }
 
     public void sendActivationMailToAdmin(User user, Collection<String> adminMails) throws MessagingException {
-    	MimeMessage message = emailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(message);
-		helper.setSubject("Aktivering");
-		helper.setFrom("noreply@gundmann.dk");
-    	helper.setTo(adminMails.toArray(new String[adminMails.size()]));
-
-    	helper.setText("<html><body>"
-    			+ "<h2>Aktivering af ny bruger</h2>"
-    			+ "<br/>"
-    			+ "<p> Følgende bruger har anmodedet om oprettelse hos Bus Roskilde:</p>"
-    			+ "<p>" + user.toString() + "</p>" 
-    			+ "<br/>"
-    			+ "<p><a href=\"http://www.gundmann.dk/bus/#/activate/" + makeLinkToken(user.getEmail()) + "\">Aktiver brugeren</a></p>"
-    			+ "<br/>"
-    			+ "<p>Med venlig hilsen</p>"
-    			+ "<p>Bus roskilde</p>"
-    			+ "</body></html>", true);
-
-    	emailSender.send(message);    	
+    	MailBuilder.aBuilder(emailSender)
+    		.subject("Aktivering")
+    		.to(adminMails)
+    		.text("<html><body>"
+        			+ "<h3>Aktivering af ny bruger</h3>"
+        			+ "<p>Følgende bruger har anmodedet om oprettelse hos Bus Roskilde:</p>"
+        			+ "<p>" + user.getName() + "</p>" 
+        			+ "<p><a href=\"http://www.gundmann.dk/bus/#/activate/" + makeLinkToken(user.getEmail()) + "\">Aktiver brugeren</a></p>"
+        			+ "<p>Med venlig hilsen</p>"
+        			+ "<p>Bus roskilde</p>"
+        			+ "</body></html>")
+    		.send();
     }
 
     public void sendMailTo(String content, Collection<String> adminMails) throws MessagingException {
@@ -74,5 +67,33 @@ class MailService implements IMailService {
     			.secret(securityConfig.getSecret())
     			.build();
     }
+
+	@Override
+	public void sendNotificationMailTo(Collection<String> mailsTo, String type) throws MessagingException {
+    	MailBuilder.aBuilder(emailSender)
+		.subject("Notification")
+		.to(mailsTo)
+		.text("News".equals(type) ? makeMessageForNews(type) : makeMessageForPlanChange(type))
+		.send();
+	}
+
+	private String makeMessageForPlanChange(String type) {
+		return "<html><body>"
+    			+ "<h3>Notifikation</h3>"
+    			+ "<p>Der sket ændringer for " + type + "hos Bus Roskilde</p>"
+    			+ "<p><a href=\"http://www.gundmann.dk/bus/#/home/plan/" + type + "\">Se ændringen her</a></p>"
+    			+ "<p>Med venlig hilsen</p>"
+    			+ "<p>Bus roskilde</p>"
+    			+ "</body></html>";
+	}
 	
+	private String makeMessageForNews(String type) {
+		return "<html><body>"
+    			+ "<h3>Nyhed</h3>"
+    			+ "<p>Der er kommet en nyhed på Bus Roskilde</p>"
+    			+ "<p><a href=\"http://www.gundmann.dk/bus/#/home/news\">Se nyheden her</a></p>"
+    			+ "<p>Med venlig hilsen</p>"
+    			+ "<p>Bus roskilde</p>"
+    			+ "</body></html>";
+	}
 }

@@ -11,4 +11,5 @@ public interface IMailService {
     void sendActivationMail(User user) throws MessagingException;
     void sendMailTo(String content, Collection<String> mails) throws MessagingException;
     void sendActivationMailToAdmin(User user, Collection<String> adminMails) throws MessagingException;
+    void sendNotificationMailTo(Collection<String> adminMails, String type) throws MessagingException;
 }

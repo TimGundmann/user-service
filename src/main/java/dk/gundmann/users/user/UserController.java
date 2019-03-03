@@ -100,4 +100,9 @@ class UserController {
 		this.mailService.sendMailTo(content, service.findAllEmailsWithRole("ADMIN"));
 	}
 
+	@PostMapping("/contactMail/{type}")
+	public void sendNotification(@PathVariable String type) throws MessagingException {
+		this.mailService.sendNotificationMailTo(service.findAllEmailsNotification(type), type);
+	}
+
 }

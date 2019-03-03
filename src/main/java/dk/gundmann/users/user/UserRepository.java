@@ -16,5 +16,7 @@ public interface UserRepository extends CrudRepository<User, String> {
 	
 	@Query("SELECT u FROM User u")
 	List<User> findAll();
-	
+
+	@Query("SELECT u FROM User u JOIN u.notifications n WHERE n = :name")
+	List<User> findAllEmailsNotification(String name);
 }
