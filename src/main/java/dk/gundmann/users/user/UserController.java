@@ -2,6 +2,7 @@ package dk.gundmann.users.user;
 
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 import javax.mail.MessagingException;
@@ -102,7 +103,10 @@ class UserController {
 
 	@PostMapping("/notification/{type}")
 	public void sendNotification(@PathVariable String type) throws MessagingException {
-		this.mailService.sendNotificationMailTo(service.findAllEmailsNotification(type), type);
+		Collection<String> mails = service.findAllEmailsNotification(type);
+		if (mails != null && !mails.isEmpty()) {
+			this.mailService.sendNotificationMailTo(mails, type);
+		}
 	}
 
 }

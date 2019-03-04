@@ -80,8 +80,8 @@ class MailService implements IMailService {
 	private String makeMessageForPlanChange(String type) {
 		return "<html><body>"
     			+ "<h3>Notifikation</h3>"
-    			+ "<p>Der sket ændringer for " + type + "hos Bus Roskilde</p>"
-    			+ "<p><a href=\"http://www.gundmann.dk/bus/#/home/plan/" + type + "\">Se ændringen her</a></p>"
+    			+ "<p>Der sket ændringer for " + type + " hos Bus Roskilde</p>"
+    			+ "<p><a href=\"http://www.gundmann.dk/bus/#/home/plans/" + type + "\">Se ændringen her</a></p>"
     			+ "<p>Med venlig hilsen</p>"
     			+ "<p>Bus roskilde</p>"
     			+ "</body></html>";
