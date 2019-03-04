@@ -3,6 +3,8 @@ package dk.gundmann.users;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
+import java.util.Base64;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -64,7 +66,7 @@ public class SignUpTest {
 		
 		String activationToken = ActivationToken.aBuilder()
 				.email("signup@test.com")
-				.secret("test")
+				.secret(Base64.getEncoder().encodeToString("test".getBytes()))
 				.build();
 		
 		// when
