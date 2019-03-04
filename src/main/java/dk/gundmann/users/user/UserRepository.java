@@ -14,7 +14,7 @@ public interface UserRepository extends CrudRepository<User, String> {
 	@Query("SELECT u FROM User u JOIN u.roles r WHERE r = :role")
 	List<User> findAllWithRole(String role);
 	
-	@Query("SELECT u FROM User u")
+	@Query("SELECT u FROM User u LEFT OUTER JOIN u.roles r WHERE r != 'SYS'")
 	List<User> findAll();
 
 	@Query("SELECT u FROM User u JOIN u.notifications n WHERE n = :name")

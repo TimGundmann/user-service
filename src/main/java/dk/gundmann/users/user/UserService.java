@@ -72,19 +72,11 @@ public class UserService {
 		mailService.sendActivationMailToAdmin(user, findAllEmailsWithRole("ADMIN"));
 	}
 	
-	private void verifyAndSaveNewUser(User user) {
-		repository.findById(user.getEmail()).ifPresent(u -> { throw new UserExistsException("Brugeren findes allerede!"); });
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
-		user.setActive(false);
-		repository.save(user);
-	}
-
 	public void toggleActivation(String email, boolean active) {
 		repository.findById(email).ifPresent(user -> { 
 			user.setActive(active);
 			repository.save(user);
 		});
-		
 	}
 
 	public void update(User user) {
@@ -101,5 +93,13 @@ public class UserService {
 				.collect(Collectors.toList());
 	}
 
+
+	private void verifyAndSaveNewUser(User user) {
+		repository.findById(user.getEmail()).ifPresent(u -> { throw new UserExistsException("Brugeren findes allerede!"); });
+		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		user.setActive(false);
+		user.getRoles().add("USER");
+		repository.save(user);
+	}
 
 }
