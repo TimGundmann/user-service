@@ -66,7 +66,7 @@ public class SignUpTest {
 		
 		String activationToken = ActivationToken.aBuilder()
 				.email("signup@test.com")
-				.secret(Base64.getEncoder().encodeToString("test".getBytes()))
+				.secret("test")
 				.build();
 		
 		// when
