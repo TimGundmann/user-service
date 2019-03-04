@@ -73,7 +73,7 @@ class MailService implements IMailService {
     	MailBuilder.aBuilder(emailSender)
 		.subject("Notification")
 		.to(mailsTo)
-		.text("News".equals(type) ? makeMessageForNews(type) : makeMessageForPlanChange(type))
+		.text("Nyheder".equals(type) ? makeMessageForNews(type) : makeMessageForPlanChange(type))
 		.send();
 	}
 
