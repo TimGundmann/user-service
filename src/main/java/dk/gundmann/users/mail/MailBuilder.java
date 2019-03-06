@@ -5,7 +5,6 @@ import java.util.Collection;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.springframework.mail.MailSender;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 
@@ -41,7 +40,7 @@ public class MailBuilder {
 
 	public MimeMessage build() {
 		MimeMessage message = emailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(message);
+		MimeMessageHelper helper = new MimeMessageHelper(message, "UTF-8");
 		try {
 			helper.setSubject(subject);
 			helper.setFrom("noreply@gundmann.dk");
