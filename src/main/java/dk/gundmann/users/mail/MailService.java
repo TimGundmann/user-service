@@ -15,6 +15,9 @@ import dk.gundmann.users.user.User;
 @Service
 class MailService implements IMailService {
 
+	private static final long TWO_DAYES = 172_800_000;
+	private static final long TWO_HOURS =   7_200_000;
+	
     private JavaMailSender emailSender;
 	private SecurityConfig securityConfig;
 
@@ -24,19 +27,24 @@ class MailService implements IMailService {
     	
     }
  
-    public void sendActivationMail(User user) throws MessagingException {
-    	MimeMessage message = emailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(message);
-		helper.setSubject("Activation");
-		helper.setFrom("noreply@gundmann.dk");
-    	helper.setTo(user.getEmail());
-
-    	helper.setText("<html><body><h2>Welcome to gundmann.dk</h2> <p>Press this link to activate you <a href=\"http://localhost:4200/#/activate/" + makeLinkToken(user.getEmail()) + "\">link</a></p></body></html>", true);
-
-    	emailSender.send(message);    	
+    public void sendActivationMail(User user) {
+    	MailBuilder.aBuilder(emailSender)
+			.subject("Aktivering")
+			.to(user.getEmail())
+			.text("<html><body><h2>Welcome to gundmann.dk</h2> <p>Press this link to activate you <a href=\"http://localhost:4200/#/activate/" + makeLinkToken(user.getEmail(), TWO_DAYES) + "\">link</a></p></body></html>")
+			.send();
+    }
+    
+    public void sendPasswordChangeMail(String email) {
+    	MailBuilder.aBuilder(emailSender)
+			.subject("Aktivering")
+			.to(email)
+			.text("<html><body><h2>Nyt password</h2> <p>Klike på linket for at ændre dit password <a href=\"http://www.gundmann.dk/bus/#/password/" + makeLinkToken(email, TWO_HOURS) + "\">Password link</a></p></body></html>")
+			.send();
     }
 
-    public void sendActivationMailToAdmin(User user, Collection<String> adminMails) throws MessagingException {
+
+    public void sendActivationMailToAdmin(User user, Collection<String> adminMails) {
     	MailBuilder.aBuilder(emailSender)
     		.subject("Aktivering")
     		.to(adminMails)
@@ -44,37 +52,36 @@ class MailService implements IMailService {
         			+ "<h3>Aktivering af ny bruger</h3>"
         			+ "<p>Følgende bruger har anmodedet om oprettelse hos Bus Roskilde:</p>"
         			+ "<p>" + user.getName() + "</p>" 
-        			+ "<p><a href=\"http://www.gundmann.dk/bus/#/activate/" + makeLinkToken(user.getEmail()) + "\">Aktiver brugeren</a></p>"
+        			+ "<p><a href=\"http://www.gundmann.dk/bus/#/activate/" + makeLinkToken(user.getEmail(), TWO_DAYES) + "\">Aktiver brugeren</a></p>"
         			+ "<p>Med venlig hilsen</p>"
         			+ "<p>Bus roskilde</p>"
         			+ "</body></html>")
     		.send();
     }
 
-    public void sendMailTo(String content, Collection<String> adminMails) throws MessagingException {
-    	MimeMessage message = emailSender.createMimeMessage();
-		MimeMessageHelper helper = new MimeMessageHelper(message);
-		helper.setSubject("Kontakt");
-		helper.setFrom("noreply@gundmann.dk");
-    	helper.setTo(adminMails.toArray(new String[adminMails.size()]));
-    	helper.setText(content, true);
-    	emailSender.send(message);    	
+    public void sendMailTo(String content, Collection<String> mails) {
+    	MailBuilder.aBuilder(emailSender)
+			.subject("Kontakt")
+			.to(mails)
+			.text(content)
+			.send();
     }
 
-    private String makeLinkToken(String email) {
-    	return ActivationToken.aBuilder()
+    private String makeLinkToken(String email, long milliseconds) {
+    	return UrlToken.aBuilder()
+    			.expirationTime(milliseconds)
     			.email(email)
     			.secret(securityConfig.getSecret())
     			.build();
     }
 
 	@Override
-	public void sendNotificationMailTo(Collection<String> mailsTo, String type) throws MessagingException {
+	public void sendNotificationMailTo(Collection<String> mailsTo, String type) {
     	MailBuilder.aBuilder(emailSender)
-		.subject("Notification")
-		.to(mailsTo)
-		.text("Nyheder".equals(type) ? makeMessageForNews(type) : makeMessageForPlanChange(type))
-		.send();
+			.subject("Notification")
+			.to(mailsTo)
+			.text("Nyheder".equals(type) ? makeMessageForNews(type) : makeMessageForPlanChange(type))
+			.send();
 	}
 
 	private String makeMessageForPlanChange(String type) {

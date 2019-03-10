@@ -8,8 +8,10 @@ import dk.gundmann.users.user.User;
 
 public interface IMailService {
 
-    void sendActivationMail(User user) throws MessagingException;
-    void sendMailTo(String content, Collection<String> mails) throws MessagingException;
-    void sendActivationMailToAdmin(User user, Collection<String> adminMails) throws MessagingException;
-    void sendNotificationMailTo(Collection<String> adminMails, String type) throws MessagingException;
+    void sendActivationMail(User user);
+    void sendMailTo(String content, Collection<String> mails);
+    void sendActivationMailToAdmin(User user, Collection<String> adminMails);
+    void sendNotificationMailTo(Collection<String> adminMails, String type);
+    void sendPasswordChangeMail(String email);
+    
 }

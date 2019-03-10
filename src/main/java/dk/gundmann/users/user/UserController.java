@@ -82,8 +82,11 @@ class UserController {
 	}
 
 	@PostMapping("/activate")
-	public void activate(@RequestBody String token) {
-		service.activate(token);
+	public ResponseEntity<Void> activate(@RequestBody String token) {
+		if (service.activate(token)) {
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.GONE);
 	}
 	
 	@PostMapping("/update")
@@ -94,6 +97,19 @@ class UserController {
 	@PostMapping("/delete")
 	public void delete(@RequestBody User user) {
 		service.delete(user);
+	}
+	
+	@PostMapping("/{email}/password/reset")
+	public void passwordReset(@PathVariable String email) {
+		service.passwrodReset(email);
+	}
+	
+	@PostMapping("/{token}/password/new")
+	public ResponseEntity<Void> newPassowrd(@RequestBody String password, @PathVariable String token) {
+		if (service.newPassword(password, token)) {
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.GONE);
 	}
 
 	@PostMapping("/contactMail")

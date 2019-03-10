@@ -5,41 +5,46 @@ import java.util.Date;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
-public class ActivationToken {
+public class UrlToken {
 
-	private static final long EXPIRATIONTIME = 172_800_000; // two days
 	private String email;
 	private String secret;
 	private String token;
+	private long milliseconds;
 
-	public static ActivationToken aBuilder() {
-		return new ActivationToken();
+	public static UrlToken aBuilder() {
+		return new UrlToken();
 	}
 	
-	public ActivationToken token(String token) {
+	public UrlToken token(String token) {
 		this.token = token;
 		return this;
 	}
 	
-	public ActivationToken email(String email) {
+	public UrlToken email(String email) {
 		this.email = email;
 		return this;
 	}
 
-	public ActivationToken secret(String secret) {
+	public UrlToken secret(String secret) {
 		this.secret = secret;
+		return this;
+	}
+
+	public UrlToken expirationTime(long milliseconds) {
+		this.milliseconds = milliseconds;
 		return this;
 	}
 
 	public String build() {
     	return Jwts.builder()
     			.setSubject(email)
-    			.setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
+    			.setExpiration(new Date(System.currentTimeMillis() + milliseconds))
     			.signWith(SignatureAlgorithm.HS512, secret)
         .compact();
 	}
 	
-	public String pars() {
+	public String parsEmail() {
 		return Jwts.parser()
 				.setSigningKey(secret)
 				.parseClaimsJws(token)

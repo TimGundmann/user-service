@@ -18,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import dk.gundmann.users.mail.ActivationToken;
+import dk.gundmann.users.mail.UrlToken;
 import dk.gundmann.users.mail.IMailService;
 import dk.gundmann.users.user.User;
 import dk.gundmann.users.user.UserRepository;
@@ -64,7 +64,7 @@ public class SignUpTest {
 		// given
 		sigeUp();
 		
-		String activationToken = ActivationToken.aBuilder()
+		String activationToken = UrlToken.aBuilder()
 				.email("signup@test.com")
 				.secret("test")
 				.build();

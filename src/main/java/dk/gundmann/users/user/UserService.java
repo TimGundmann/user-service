@@ -11,7 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import dk.gundmann.security.SecurityConfig;
-import dk.gundmann.users.mail.ActivationToken;
+import dk.gundmann.users.mail.UrlToken;
 import dk.gundmann.users.mail.IMailService;
 
 @Service
@@ -50,15 +50,21 @@ public class UserService {
 	}
 
 	public boolean activate(String token) {
-		return repository.findById(ActivationToken.aBuilder()
+		return repository.findById(UrlToken.aBuilder()
 				.secret(securityConfig.getSecret())
 				.token(token)
-				.pars())
+				.parsEmail())
 			.map(user -> {
 				user.setActive(true);
 				repository.save(user);
 				return true;
 			}).orElse(false);
+	}
+	
+	public void passwrodReset(String email) {
+		repository.findById(email)
+			.orElseThrow(() -> new UserExistsException("Brugeren findes ikke!"));
+		this.mailService.sendPasswordChangeMail(email);
 	}
 	
 	public List<String> findAllEmailsWithRole(String role) {
@@ -93,6 +99,17 @@ public class UserService {
 				.collect(Collectors.toList());
 	}
 
+	public boolean newPassword(String password, String token) {
+		return repository.findById(UrlToken.aBuilder()
+				.secret(securityConfig.getSecret())
+				.token(token)
+				.parsEmail())
+			.map(user -> {
+				user.setPassword(passwordEncoder.encode(password));
+				repository.save(user);
+				return true;
+			}).orElse(false);
+	}
 
 	private void verifyAndSaveNewUser(User user) {
 		repository.findById(user.getEmail()).ifPresent(u -> { throw new UserExistsException("Brugeren findes allerede!"); });

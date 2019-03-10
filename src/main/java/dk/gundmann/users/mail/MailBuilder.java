@@ -1,6 +1,8 @@
 package dk.gundmann.users.mail;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
@@ -11,7 +13,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 public class MailBuilder {
 
 	private String subject;
-	private Collection<String> mailsTo;
+	private Collection<String> mailsTo = new HashSet<>();
 	private String text;
 	private JavaMailSender emailSender;
 
@@ -29,7 +31,12 @@ public class MailBuilder {
 	}
 
 	public MailBuilder to(Collection<String> mailsTo) {
-		this.mailsTo = mailsTo;
+		this.mailsTo.addAll(mailsTo);
+		return this;
+	}
+
+	public MailBuilder to(String mailsTo) {
+		this.mailsTo.add(mailsTo);
 		return this;
 	}
 
