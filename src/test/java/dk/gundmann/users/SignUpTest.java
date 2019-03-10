@@ -3,8 +3,6 @@ package dk.gundmann.users;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
-import java.util.Base64;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,8 +16,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import dk.gundmann.users.mail.UrlToken;
 import dk.gundmann.users.mail.IMailService;
+import dk.gundmann.users.mail.UrlToken;
 import dk.gundmann.users.user.User;
 import dk.gundmann.users.user.UserRepository;
 
@@ -65,6 +63,7 @@ public class SignUpTest {
 		sigeUp();
 		
 		String activationToken = UrlToken.aBuilder()
+				.expirationTime(5000000)
 				.email("signup@test.com")
 				.secret("test")
 				.build();
