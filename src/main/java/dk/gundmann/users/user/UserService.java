@@ -29,10 +29,13 @@ public class UserService {
 		this.mailService = mailService;
 	}
 	
-	public Optional<User> findActiveByEmail(String email) {
-		return repository.findActiveUser(email);
+	public Optional<User> findActiveUser(String id) {
+        if (id.contains("@")) {
+        	return repository.findActiveUserByEmail(id);
+        }
+    	return repository.findActiveUserByNumber(id);
 	}
-	
+
 	public void createUser(String email, String password) {
 		repository.save(User.builder()
 				.email(email)
@@ -109,6 +112,15 @@ public class UserService {
 				repository.save(user);
 				return true;
 			}).orElse(false);
+	}
+
+	public boolean updatePassword(String email, String password) {
+		return repository.findById(email)
+			.map(user -> {
+				user.setPassword(passwordEncoder.encode(password));
+				repository.save(user);
+				return true;
+			}).orElse(false);		
 	}
 
 	private void verifyAndSaveNewUser(User user) {

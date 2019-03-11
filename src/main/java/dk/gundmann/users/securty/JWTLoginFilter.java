@@ -54,11 +54,11 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
             throws AuthenticationException, IOException, ServletException {
         AccountCredentials creds = new ObjectMapper()
                 .readValue(req.getInputStream(), AccountCredentials.class);
-        return userService.findActiveByEmail(creds.getUsername()).map(user -> 
+        return userService.findActiveUser(creds.getUsername()).map(user -> 
         	getAuthenticationManager().authenticate(
                 new UsernamePasswordAuthenticationToken(
-                        creds.getUsername(),
-                        creds.getPassword(),
+                		user.getEmail(),
+                		creds.getPassword(),
                         user.getRoles().stream()
     							.map(role -> new SimpleGrantedAuthority(role))
     							.collect(Collectors.toList())

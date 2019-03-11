@@ -37,7 +37,7 @@ class MailService implements IMailService {
     
     public void sendPasswordChangeMail(String email) {
     	MailBuilder.aBuilder(emailSender)
-			.subject("Aktivering")
+			.subject("Nyt password")
 			.to(email)
 			.text("<html><body><h2>Nyt password</h2> <p>Klike på linket for at ændre dit password <a href=\"http://www.gundmann.dk/bus/#/password/" + makeLinkToken(email, TWO_HOURS) + "\">Password link</a></p></body></html>")
 			.send();

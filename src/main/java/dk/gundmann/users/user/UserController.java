@@ -62,7 +62,7 @@ class UserController {
 
 	@GetMapping("/current")
 	public User current(Principal principal) {
-		return service.findActiveByEmail(principal.getName()).get();
+		return service.findActiveUser(principal.getName()).get();
 	}
 
 	@PostMapping("/signup")
@@ -92,6 +92,14 @@ class UserController {
 	@PostMapping("/update")
 	public void update(@RequestBody User user) {
 		service.update(user);
+	}
+	
+	@PostMapping("/{email}/updatepassword")
+	public ResponseEntity<Void> updatePassword(@PathVariable String email, @RequestBody String password) {
+		if (service.updatePassword(email, password)) {
+			return new ResponseEntity<>(HttpStatus.OK);
+		}
+		return new ResponseEntity<>(HttpStatus.GONE);
 	}
 
 	@PostMapping("/delete")
