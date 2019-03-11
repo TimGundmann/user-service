@@ -10,7 +10,7 @@ node {
        pom = readMavenPom file: 'pom.xml'
        newVersion = pom.version + "." + env.BUILD_NUMBER
        sh "'${mvnHome}/bin/mvn' versions:set -DnewVersion=${newVersion}"
-       currentBuild.displayName = newVersion
+       currentBuild.displayName = "Version: ${newVersion}"
    }
    stage('Build') {
      sh "'${mvnHome}/bin/mvn' clean package -U"
