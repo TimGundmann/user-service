@@ -1,7 +1,6 @@
 package dk.gundmann.users.mail;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
 
 import javax.mail.MessagingException;

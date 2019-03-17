@@ -2,8 +2,6 @@ package dk.gundmann.users.mail;
 
 import java.util.Collection;
 
-import javax.mail.MessagingException;
-
 import dk.gundmann.users.user.User;
 
 public interface IMailService {

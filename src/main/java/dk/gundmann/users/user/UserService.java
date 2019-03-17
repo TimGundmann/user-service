@@ -89,6 +89,7 @@ public class UserService {
 	}
 
 	public void update(User user) {
+		user.getRoles().add("USER");
 		repository.save(user);
 	}
 
@@ -118,7 +119,7 @@ public class UserService {
 		return repository.findById(email)
 			.map(user -> {
 				user.setPassword(passwordEncoder.encode(password));
-				repository.save(user);
+				update(user);
 				return true;
 			}).orElse(false);		
 	}

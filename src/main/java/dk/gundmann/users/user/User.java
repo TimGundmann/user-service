@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.Lob;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Size;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -37,6 +38,7 @@ public class User {
 
 	private boolean active;
 	
+	@Size(min = 1)
 	@Builder.Default
 	@ElementCollection(fetch=FetchType.EAGER) 	
 	private Set<String> roles = new HashSet<>();

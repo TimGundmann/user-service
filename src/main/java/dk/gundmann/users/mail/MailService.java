@@ -2,11 +2,7 @@ package dk.gundmann.users.mail;
 
 import java.util.Collection;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
 
 import dk.gundmann.security.SecurityConfig;
