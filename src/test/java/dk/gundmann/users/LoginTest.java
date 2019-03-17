@@ -111,6 +111,7 @@ public class LoginTest {
 				.password(passwordEncoder.encode("password"))
 				.name("Test")
 				.active(true)
+				.roles(Collections.singleton("USER"))
 				.build());
 	}
 
