@@ -115,16 +115,6 @@ public class LoginTest {
 				.build());
 	}
 
-	private User createAnAdminUser() {
-		return userRepository.save(User.builder()
-				.email("test@test.com")
-				.password(passwordEncoder.encode("password"))
-				.name("Test")
-				.active(true)
-				.roles(Collections.singleton("ADMIN"))
-				.build());
-	}
-
 	private ResponseEntity<String> login() {
 		return template.postForEntity("/login", AccountCredentials.builder()
 				.username("test@test.com")
