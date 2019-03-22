@@ -35,7 +35,7 @@ class MailService implements IMailService {
     	MailBuilder.aBuilder(emailSender)
 			.subject("Nyt password")
 			.to(email)
-			.text("<html><body><h2>Nyt password</h2> <p>Klike på linket for at ændre dit password <a href=\"http://www.gundmann.dk/bus/#/password/" + makeLinkToken(email, TWO_HOURS) + "\">Password link</a></p></body></html>")
+			.text("<html><body><h2>Nyt password</h2> <p>Klike på linket for at ændre dit password <a href=\"http://busroskilde.dk/bus/#/password/" + makeLinkToken(email, TWO_HOURS) + "\">Password link</a></p></body></html>")
 			.send();
     }
 
@@ -48,7 +48,7 @@ class MailService implements IMailService {
         			+ "<h3>Aktivering af ny bruger</h3>"
         			+ "<p>Følgende bruger har anmodedet om oprettelse hos Bus Roskilde:</p>"
         			+ "<p>" + user.getName() + "</p>" 
-        			+ "<p><a href=\"http://www.gundmann.dk/bus/#/activate/" + makeLinkToken(user.getEmail(), TWO_DAYES) + "\">Aktiver brugeren</a></p>"
+        			+ "<p><a href=\"http://busroskilde.dk/bus/#/activate/" + makeLinkToken(user.getEmail(), TWO_DAYES) + "\">Aktiver brugeren</a></p>"
         			+ "<p>Med venlig hilsen</p>"
         			+ "<p>Bus roskilde</p>"
         			+ "</body></html>")
@@ -84,7 +84,7 @@ class MailService implements IMailService {
 		return "<html><body>"
     			+ "<h3>Notifikation</h3>"
     			+ "<p>Der sket ændringer for " + type + " hos Bus Roskilde</p>"
-    			+ "<p><a href=\"http://www.gundmann.dk/bus/#/home/plans/" + type + "\">Se ændringen her</a></p>"
+    			+ "<p><a href=\"http://busroskilde.dk/bus/#/home/plans/" + type + "\">Se ændringen her</a></p>"
     			+ "<p>Med venlig hilsen</p>"
     			+ "<p>Bus roskilde</p>"
     			+ "</body></html>";
@@ -94,7 +94,7 @@ class MailService implements IMailService {
 		return "<html><body>"
     			+ "<h3>Nyhed</h3>"
     			+ "<p>Der er kommet en nyhed på Bus Roskilde</p>"
-    			+ "<p><a href=\"http://www.gundmann.dk/bus/#/home/news\">Se nyheden her</a></p>"
+    			+ "<p><a href=\"http://busroskilde.dk/bus/#/home/news\">Se nyheden her</a></p>"
     			+ "<p>Med venlig hilsen</p>"
     			+ "<p>Bus roskilde</p>"
     			+ "</body></html>";
