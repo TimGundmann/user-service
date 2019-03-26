@@ -1,6 +1,7 @@
 package dk.gundmann.users.user;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -128,6 +129,9 @@ public class UserService {
 		repository.findById(user.getEmail()).ifPresent(u -> { throw new UserExistsException("Brugeren findes allerede!"); });
 		user.setPassword(passwordEncoder.encode(user.getPassword()));
 		user.setActive(false);
+		if (user.getRoles() == null) {
+			user.setRoles(new HashSet<>());
+		}
 		user.getRoles().add("USER");
 		repository.save(user);
 	}
