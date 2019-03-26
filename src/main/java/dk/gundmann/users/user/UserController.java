@@ -21,10 +21,12 @@ import org.springframework.web.context.request.WebRequest;
 
 import dk.gundmann.security.IsAdmin;
 import dk.gundmann.users.mail.IMailService;
+import lombok.extern.slf4j.Slf4j;
 
 @RestController
 @RequestMapping("/")
 @ControllerAdvice
+@Slf4j
 class UserController {
 
 	private UserService service;
@@ -37,6 +39,7 @@ class UserController {
 
 	@ExceptionHandler(UserExistsException.class)
 	public final ResponseEntity<ErrorDetails> handleUserNotFoundException(Exception ex, WebRequest request) {
+		log.error(ex.getMessage(), ex);
 		return new ResponseEntity<>(ErrorDetails.builder()
 				.timestamp(LocalDateTime.now())
 				.message(ex.getMessage())
@@ -47,6 +50,7 @@ class UserController {
 
 	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<ErrorDetails> handleException(Exception ex, WebRequest request) {
+		log.error(ex.getMessage(), ex);
 		return new ResponseEntity<>(ErrorDetails.builder()
 				.timestamp(LocalDateTime.now())
 				.message(ex.getMessage())
