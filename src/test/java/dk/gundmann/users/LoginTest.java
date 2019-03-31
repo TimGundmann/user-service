@@ -3,6 +3,7 @@ package dk.gundmann.users;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 
+import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 
@@ -118,9 +119,13 @@ public class LoginTest {
 	private ResponseEntity<String> login() {
 		return template.postForEntity("/login", AccountCredentials.builder()
 				.username("test@test.com")
-				.password("password")
+				.password(atob("password"))
 				.build(), 
 				String.class);
+	}
+
+	private String atob(String value) {
+		return Base64.getEncoder().encodeToString(value.getBytes());
 	}
 
 }
