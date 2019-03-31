@@ -1,5 +1,6 @@
 package dk.gundmann.users.user;
 
+import java.util.Base64;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -23,7 +24,11 @@ public class UserService {
 	private SecurityConfig securityConfig;
 	private IMailService mailService;
 
-	public UserService(UserRepository repository, PasswordEncoder passwordEncoder, SecurityConfig securityConfig, IMailService mailService) {
+	public UserService(
+		UserRepository repository, 
+		PasswordEncoder passwordEncoder, 
+		SecurityConfig securityConfig,
+		IMailService mailService) {
 		this.repository = repository;
 		this.passwordEncoder = passwordEncoder;
 		this.securityConfig = securityConfig;
@@ -37,13 +42,6 @@ public class UserService {
     	return repository.findActiveUserByNumber(id);
 	}
 
-	public void createUser(String email, String password) {
-		repository.save(User.builder()
-				.email(email)
-				.password(passwordEncoder.encode(password))
-				.build());
-	}
-	
 	public List<User> users() {
 		return this.repository.findAll();
 	}
@@ -104,13 +102,13 @@ public class UserService {
 				.collect(Collectors.toList());
 	}
 
-	public boolean newPassword(String password, String token) {
+	public boolean newPassword(String token, String password) {
 		return repository.findById(UrlToken.aBuilder()
 				.secret(securityConfig.getSecret())
 				.token(token)
 				.parsEmail())
 			.map(user -> {
-				user.setPassword(passwordEncoder.encode(password));
+				user.setPassword(passwordEncoder.encode(atob(password)));
 				repository.save(user);
 				return true;
 			}).orElse(false);
@@ -119,15 +117,20 @@ public class UserService {
 	public boolean updatePassword(String email, String password) {
 		return repository.findById(email)
 			.map(user -> {
-				user.setPassword(passwordEncoder.encode(password));
+				user.setPassword(passwordEncoder.encode(atob(password)));
 				update(user);
 				return true;
 			}).orElse(false);		
 	}
 
+	public String atob(String base64) {
+		return new String(Base64.getDecoder().decode(base64.getBytes()));
+	}
+
 	private void verifyAndSaveNewUser(User user) {
-		repository.findById(user.getEmail()).ifPresent(u -> { throw new UserExistsException("Brugeren findes allerede!"); });
-		user.setPassword(passwordEncoder.encode(user.getPassword()));
+		repository.findById(user.getEmail())
+			.ifPresent(u -> { throw new UserExistsException("Brugeren findes allerede!"); });
+		user.setPassword(passwordEncoder.encode(atob(user.getPassword())));
 		user.setActive(false);
 		if (user.getRoles() == null) {
 			user.setRoles(new HashSet<>());

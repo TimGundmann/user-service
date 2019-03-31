@@ -118,7 +118,7 @@ class UserController {
 	
 	@PostMapping("/{token}/password/new")
 	public ResponseEntity<Void> newPassowrd(@RequestBody String password, @PathVariable String token) {
-		if (service.newPassword(password, token)) {
+		if (service.newPassword(token, password)) {
 			return new ResponseEntity<>(HttpStatus.OK);
 		}
 		return new ResponseEntity<>(HttpStatus.GONE);
