@@ -3,6 +3,7 @@ package dk.gundmann.users.user;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -28,6 +29,7 @@ public class User {
 	@Id
 	private String email;
 	
+	@Column(unique=true)
 	private String number;
 	
 	@NotBlank
