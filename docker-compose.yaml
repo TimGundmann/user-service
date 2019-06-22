@@ -7,3 +7,5 @@ services:
     image: user-service
     volumes:
       - /security:/security
+    environment:
+      TZ: "Europe/Amsterdam"
