@@ -6,6 +6,7 @@ import java.util.Collection;
 import java.util.List;
 
 import javax.mail.MessagingException;
+import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
 
@@ -40,23 +42,15 @@ class UserController {
 	@ExceptionHandler(UserExistsException.class)
 	public final ResponseEntity<ErrorDetails> handleUserNotFoundException(Exception ex, WebRequest request) {
 		log.error(ex.getMessage(), ex);
-		return new ResponseEntity<>(ErrorDetails.builder()
-				.timestamp(LocalDateTime.now())
-				.message(ex.getMessage())
-				.details(request.getDescription(false))
-				.build(), 
-			HttpStatus.CONFLICT);
+		return new ResponseEntity<>(ErrorDetails.builder().timestamp(LocalDateTime.now()).message(ex.getMessage())
+				.details(request.getDescription(false)).build(), HttpStatus.CONFLICT);
 	}
 
 	@ExceptionHandler(Exception.class)
 	public final ResponseEntity<ErrorDetails> handleException(Exception ex, WebRequest request) {
 		log.error(ex.getMessage(), ex);
-		return new ResponseEntity<>(ErrorDetails.builder()
-				.timestamp(LocalDateTime.now())
-				.message(ex.getMessage())
-				.details(request.getDescription(false))
-				.build(), 
-			HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(ErrorDetails.builder().timestamp(LocalDateTime.now()).message(ex.getMessage())
+				.details(request.getDescription(false)).build(), HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
 	@GetMapping("/all")
@@ -92,12 +86,12 @@ class UserController {
 		}
 		return new ResponseEntity<>(HttpStatus.GONE);
 	}
-	
+
 	@PostMapping("/update")
 	public void update(@RequestBody User user) {
 		service.update(user);
 	}
-	
+
 	@PostMapping("/{email}/updatepassword")
 	public ResponseEntity<Void> updatePassword(@PathVariable String email, @RequestBody String password) {
 		if (service.updatePassword(email, password)) {
@@ -110,12 +104,12 @@ class UserController {
 	public void delete(@RequestBody User user) {
 		service.delete(user);
 	}
-	
+
 	@PostMapping("/{email}/password/reset")
 	public void passwordReset(@PathVariable String email) {
 		service.passwrodReset(email);
 	}
-	
+
 	@PostMapping("/{token}/password/new")
 	public ResponseEntity<Void> newPassowrd(@RequestBody String password, @PathVariable String token) {
 		if (service.newPassword(token, password)) {
