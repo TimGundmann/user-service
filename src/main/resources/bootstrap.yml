@@ -1,0 +1,12 @@
+server:
+  port: 8443
+
+spring:
+  profiles:
+    active:
+    - prod
+  application:
+    name: users
+  cloud:
+    config:
+      uri: http://192.168.1.100:5678
