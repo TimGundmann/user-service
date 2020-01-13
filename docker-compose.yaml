@@ -9,3 +9,4 @@ services:
       - /security:/security
     environment:
       TZ: "Europe/Amsterdam"
+    container_name: user-service
