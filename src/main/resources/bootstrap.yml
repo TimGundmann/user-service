@@ -8,6 +8,4 @@ spring:
   application:
     name: users
   cloud:
-    import: optional:classpath:/
-    config:
-      uri: http://localhost:5678
+    import: optional:configserver:http://localhost:5678
