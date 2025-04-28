@@ -19,7 +19,6 @@ jobs:
           distribution: 'temurin'
           java-version: 23
 
-
       - name: Configure Maven for GitHub Packages
         run: |
           mkdir -p ~/.m2
@@ -61,4 +60,4 @@ jobs:
             docker load < /tmp/user-service.tar.gz
             docker stop user-service || true
             docker rm user-service || true
-            docker run -d --name user-service -p 8443:8443 user-service:latest
+            docker run -d --name user-service -p 8443:8443 -v - -v $HOME/user-service/certs:/security user-service:latest
