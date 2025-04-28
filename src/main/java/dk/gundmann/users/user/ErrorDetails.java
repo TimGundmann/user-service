@@ -1,9 +1,9 @@
 package dk.gundmann.users.user;
 
-import java.time.LocalDateTime;
-
 import lombok.Builder;
 import lombok.Getter;
+
+import java.time.LocalDateTime;
 
 @Getter
 @Builder

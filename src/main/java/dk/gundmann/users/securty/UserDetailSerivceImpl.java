@@ -1,19 +1,19 @@
 package dk.gundmann.users.securty;
 
-import java.util.Collection;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
+import dk.gundmann.users.user.User;
+import dk.gundmann.users.user.UserService;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Service;
 
-import dk.gundmann.users.user.User;
-import dk.gundmann.users.user.UserService;
+import java.util.Collection;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
-@org.springframework.stereotype.Service
+@Service
 public class UserDetailSerivceImpl implements UserDetailsService {
 
 	private UserService service;

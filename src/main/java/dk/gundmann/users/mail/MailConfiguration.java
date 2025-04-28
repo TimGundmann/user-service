@@ -1,13 +1,12 @@
 package dk.gundmann.users.mail;
 
-import java.util.Properties;
-
+import dk.gundmann.security.SecurityConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 
-import dk.gundmann.security.SecurityConfig;
+import java.util.Properties;
 
 @Configuration
 public class MailConfiguration {

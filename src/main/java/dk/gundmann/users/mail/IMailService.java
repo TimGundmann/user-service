@@ -1,8 +1,8 @@
 package dk.gundmann.users.mail;
 
-import java.util.Collection;
-
 import dk.gundmann.users.user.User;
+
+import java.util.Collection;
 
 public interface IMailService {
 

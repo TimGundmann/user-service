@@ -1,22 +1,11 @@
 package dk.gundmann.users.user;
 
+import jakarta.annotation.Nonnull;
+import jakarta.persistence.*;
+import lombok.*;
+
 import java.util.HashSet;
 import java.util.Set;
-
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.Id;
-import javax.persistence.Lob;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Data
 @Entity
@@ -24,6 +13,7 @@ import lombok.ToString;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude="password")
+@Table(name = "`user`")
 public class User {
 
 	@Id
@@ -32,15 +22,14 @@ public class User {
 	@Column(unique=true)
 	private String number;
 	
-	@NotBlank
+	@Nonnull
 	private String name;
-	
-	@NotBlank
+
+	@Nonnull
 	private String password;
 
 	private boolean active;
 	
-	@Size(min = 1)
 	@Builder.Default
 	@ElementCollection(fetch=FetchType.EAGER) 	
 	private Set<String> roles = new HashSet<>();

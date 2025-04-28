@@ -1,9 +1,9 @@
 package dk.gundmann.users.mail;
 
-import java.util.Date;
-
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+
+import java.util.Date;
 
 public class UrlToken {
 
@@ -47,6 +47,7 @@ public class UrlToken {
 	public String parsEmail() {
 		return Jwts.parser()
 				.setSigningKey(secret)
+				.build()
 				.parseClaimsJws(token)
 				.getBody()
 				.getSubject();

@@ -1,13 +1,12 @@
 package dk.gundmann.users.mail;
 
-import java.util.Collection;
-import java.util.HashSet;
-
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
-
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+
+import java.util.Collection;
+import java.util.HashSet;
 
 public class MailBuilder {
 

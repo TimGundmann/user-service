@@ -1,20 +1,14 @@
 package dk.gundmann.users.user;
 
-import java.util.Base64;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import javax.mail.MessagingException;
-
+import dk.gundmann.security.SecurityConfig;
+import dk.gundmann.users.mail.IMailService;
+import dk.gundmann.users.mail.UrlToken;
+import jakarta.mail.MessagingException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import dk.gundmann.security.SecurityConfig;
-import dk.gundmann.users.mail.UrlToken;
-import dk.gundmann.users.mail.IMailService;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {

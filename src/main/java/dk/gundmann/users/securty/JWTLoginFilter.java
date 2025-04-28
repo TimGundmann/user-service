@@ -1,14 +1,12 @@
 package dk.gundmann.users.securty;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.stream.Collectors;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
+import com.fasterxml.jackson.databind.ObjectMapper;
+import dk.gundmann.security.RemoteAddressResolver;
+import dk.gundmann.security.SecurityConfig;
+import dk.gundmann.users.user.UserService;
+import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureAlgorithm;
+import jakarta.servlet.FilterChain;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -17,23 +15,19 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.web.authentication.AbstractAuthenticationProcessingFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-
-import dk.gundmann.security.RemoteAddressResolver;
-import dk.gundmann.security.SecurityConfig;
-import dk.gundmann.users.user.UserService;
-import io.jsonwebtoken.Jwts;
-import io.jsonwebtoken.SignatureAlgorithm;
+import java.io.IOException;
+import java.util.Date;
+import java.util.stream.Collectors;
 
 public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
-    private static final long EXPIRATIONTIME = 864_000_000; // 10 days
+    private static final long EXPIRATION_TIME = 864_000_000; // 10 days
 
-	private SecurityConfig securityConfig;
+	private final SecurityConfig securityConfig;
 
-	private UserService userService;
+	private final UserService userService;
 
-	private RemoteAddressResolver addressResolver;
+	private final RemoteAddressResolver addressResolver;
 
     public JWTLoginFilter(
     		String url, 
@@ -50,8 +44,8 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     public Authentication attemptAuthentication(
-            HttpServletRequest req, HttpServletResponse res)
-            throws AuthenticationException, IOException, ServletException {
+			jakarta.servlet.http.HttpServletRequest req, jakarta.servlet.http.HttpServletResponse res)
+            throws AuthenticationException, IOException, jakarta.servlet.ServletException {
         AccountCredentials creds = new ObjectMapper()
                 .readValue(req.getInputStream(), AccountCredentials.class);
         return userService.findActiveUser(creds.getUsername()).map(user -> 
@@ -68,12 +62,12 @@ public class JWTLoginFilter extends AbstractAuthenticationProcessingFilter {
 
     @Override
     protected void successfulAuthentication(
-            HttpServletRequest req,
-            HttpServletResponse res, FilterChain chain,
-            Authentication auth) throws IOException, ServletException {
+			jakarta.servlet.http.HttpServletRequest req,
+			jakarta.servlet.http.HttpServletResponse res, FilterChain chain,
+			Authentication auth) throws IOException, jakarta.servlet.ServletException {
            	String JWT = Jwts.builder()
                     .setSubject(auth.getName())
-                    .setExpiration(new Date(System.currentTimeMillis() + EXPIRATIONTIME))
+                    .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION_TIME))
                     .signWith(SignatureAlgorithm.HS512, securityConfig.getSecret())
                     .claim("ip", addressResolver.remoteAdress(req))
                     .claim("roles", auth.getAuthorities().stream()
