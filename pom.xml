@@ -129,7 +129,7 @@
 	<repositories>
 		<repository>
 			<id>github</id>
-			<url>https://maven.pkg.github.com/TimGundmann/gundmann-jwt-security</url>
+			<url>https://maven.pkg.github.com/timgundmann/gundmann-jwt-security</url>
 		</repository>
 	</repositories>
 </project>
