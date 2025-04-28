@@ -9,3 +9,5 @@ spring:
     name: users
   config:
     import: optional:configserver:http://localhost:5678
+  main:
+    allow-bean-definition-overriding: true
