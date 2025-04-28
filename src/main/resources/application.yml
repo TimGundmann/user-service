@@ -8,6 +8,6 @@ spring:
   application:
     name: users
   config:
-    import: optional:configserver:http://host.docker.internal:5678
+    import: optional:configserver:http://91.210.58.91:5678
   main:
     allow-bean-definition-overriding: true
